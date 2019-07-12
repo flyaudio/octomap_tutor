@@ -1,4 +1,4 @@
-/*************************************************************************
+﻿/*************************************************************************
 	> File Name: src/pcd2octomap.cpp
 	> Author: Gao Xiang
 	> Mail: gaoxiang12@mails.tsinghua.edu.cn
@@ -44,7 +44,7 @@ int main( int argc, char** argv )
     // 更新octomap
     tree.updateInnerOccupancy();
     // 存储octomap
-    tree.writeBinary( output_file );
+    tree.writeBinary( output_file );//The OcTree is first converted to the maximum likelihood estimate and pruned
     cout<<"done."<<endl;
 
     return 0;

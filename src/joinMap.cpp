@@ -1,4 +1,4 @@
-/*************************************************************************
+﻿/*************************************************************************
 	> File Name: src/joinMap.cpp
 	> Author: Gao Xiang
 	> Mail: gaoxiang12@mails.tsinghua.edu.cn
@@ -96,7 +96,7 @@ int main( int argc, char** argv )
         Eigen::Isometry3d& pose = poses[i];
 
         // 生成第k帧的点云，拼接至全局octomap上
-        boost::format fmt ("./data/rgb_index/%d.ppm" );
+        boost::format fmt ("./data/rgb_index/%d.ppm" );//ppm,无压缩的图片格式
         cv::Mat rgb = cv::imread( (fmt % k).str().c_str() );
         fmt = boost::format("./data/dep_index/%d.pgm" );
         cv::Mat depth = cv::imread( (fmt % k).str().c_str(), -1 );
@@ -107,7 +107,7 @@ int main( int argc, char** argv )
             for ( int n=0; n<depth.cols; n++ )
             {
                 ushort d = depth.ptr<ushort> (m) [n];
-                if (d == 0)
+                if (d == 0)//无效depth
                     continue;
                 float z = float(d) / camera_scale;
                 float x = (n - camera_cx) * z / camera_fx;
@@ -125,9 +125,9 @@ int main( int argc, char** argv )
             }
         // 将cloud旋转之后插入全局地图
         pcl::PointCloud<pcl::PointXYZRGBA>::Ptr temp( new pcl::PointCloud<pcl::PointXYZRGBA>() );
-        pcl::transformPointCloud( cloud, *temp, pose.matrix() );
+        pcl::transformPointCloud( cloud, *temp, pose.matrix() );//https://www.cnblogs.com/21207-iHome/p/6032691.html
 
-        octomap::Pointcloud cloud_octo;
+        octomap::Pointcloud cloud_octo;//octomap里的pointcloud是一种射线的形式，只有末端才存在被占据的点，中途的点则是没被占据的。这会使一些重叠地方处理的更好
         for (auto p:temp->points)
             cloud_octo.push_back( p.x, p.y, p.z );
         
